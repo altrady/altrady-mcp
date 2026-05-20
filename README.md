@@ -6,15 +6,33 @@ This repo ships a curated set of **trader workflow skills** that build on top of
 
 ---
 
-## One-liner install
+## Install
+
+The install is two steps. The Altrady desktop app gives you the first; this repo gives you the second.
+
+### Step 1 — Connect the MCP server (from the Altrady desktop app)
+
+1. Open the **Altrady desktop app**.
+2. Go to **Settings → AI Assistants → Connect Claude Code** (or the equivalent for your AI tool).
+3. Copy the install command shown there. It includes your personal authorization token and looks roughly like:
+   ```
+   claude mcp add altrady <URL with your token>
+   ```
+4. Paste and run it in your terminal.
+
+> The token is account-scoped — don't share it or commit it. The desktop app can rotate it if needed.
+
+### Step 2 — Install the workflow skills
 
 Paste this into Claude Code (or any AI tool that can read URLs and run shell):
 
 ```
-Set up Altrady for me: read https://raw.githubusercontent.com/altrady/altrady-mcp/main/INSTALL.md and follow it exactly.
+Set up the Altrady workflow skills: read https://raw.githubusercontent.com/altrady/altrady-mcp/main/INSTALL.md and follow it exactly.
 ```
 
-The AI will install the Altrady MCP server, clone this repo, install the skills into your Claude Code config, and verify the connection.
+The AI will clone this repo, install the skills into your Claude Code config, and verify the connection by calling the MCP.
+
+Prefer to do it by hand? See **Manual install** below.
 
 > **Heads up:** money-affecting actions (opening positions, starting bots, deleting alerts) always require explicit confirmation. The skills are designed so the AI suggests and you approve.
 
@@ -25,8 +43,9 @@ The AI will install the Altrady MCP server, clone this repo, install the skills 
 If you'd rather run the steps yourself:
 
 ```bash
-# 1. Install the Altrady MCP server
-claude mcp add altrady <ALTRADY_MCP_URL>   # see INSTALL.md for the current URL
+# 1. Run the MCP install command from the Altrady desktop app
+#    (Settings → AI Assistants → Connect Claude Code)
+#    It looks like: claude mcp add altrady https://mcp.altrady.com/...?token=...
 
 # 2. Clone this repo
 git clone https://github.com/altrady/altrady-mcp ~/.altrady-mcp
@@ -60,7 +79,7 @@ bash ~/.altrady-mcp/install.sh
 
 ## What this repo is not
 
-- Not the MCP server itself. The server is installed separately via `claude mcp add altrady`.
+- Not the MCP server itself. The server is installed via the command provided in the Altrady desktop app.
 - Not a trading bot. The skills suggest actions; you confirm before anything executes.
 - Not financial advice. The skills automate workflows you'd already do by hand.
 

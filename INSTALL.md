@@ -1,33 +1,39 @@
-# Altrady MCP — AI-Executable Install Recipe
+# Altrady MCP Skills — AI-Executable Install Recipe
 
 > **Instructions for the AI tool reading this file.** Follow every step in order. Stop and report to the user on any error before continuing.
 
-You are setting up the Altrady MCP server plus the trader workflow skills for the user. The work has four phases:
+This recipe installs the **trader workflow skills** that build on the Altrady MCP server. It does NOT install the MCP server itself — that step is done from the Altrady desktop app, which provides a command preloaded with the user's authorization token.
 
-1. Add the Altrady MCP server.
+The work has four phases:
+
+1. Confirm the Altrady MCP server is registered.
 2. Clone this repo to a stable local path.
 3. Install the skills into Claude Code's skills directory.
-4. Verify the install.
+4. Verify the install end-to-end.
 
 ---
 
-## Phase 1 — Add the Altrady MCP server
+## Phase 1 — Confirm the Altrady MCP server is registered
 
-Run:
-
-```bash
-claude mcp add altrady <TODO: ALTRADY_MCP_URL>
-```
-
-> **TODO for repo maintainers:** replace `<TODO: ALTRADY_MCP_URL>` with the current Altrady MCP endpoint (e.g. `https://mcp.altrady.com/v1/sse`) before publishing. If you are an AI running this file and the placeholder is still here, **stop** and tell the user the MCP URL is not set — link them to https://altrady.com/mcp for the current value.
-
-If the MCP requires an API key, prompt the user for it and pass it via `--env ALTRADY_API_KEY=<value>` or follow the auth flow Altrady documents.
-
-After the command completes, confirm it appears in:
+The user installs the MCP server from inside the **Altrady desktop app**: Settings → AI Assistants → Connect Claude Code. That gives them a command like:
 
 ```bash
-claude mcp list
+claude mcp add altrady <URL with their personal token>
 ```
+
+Check whether they've already run it:
+
+```bash
+claude mcp list | grep -i altrady || echo "MISSING"
+```
+
+- If `altrady` appears in the list, continue to Phase 2.
+- If you see `MISSING`, **stop** and tell the user:
+  > "I don't see the Altrady MCP server registered. Open the Altrady desktop app, go to **Settings → AI Assistants → Connect Claude Code**, copy the `claude mcp add altrady …` command (it includes your auth token), run it in your terminal, then ask me to continue."
+  >
+  > Wait for them to run it before retrying.
+
+Do **not** try to fabricate or guess the URL or token. The desktop app is the source of truth.
 
 ---
 
@@ -82,7 +88,7 @@ Ask the user to **restart Claude Code** (skills are loaded at startup), then run
 Use the Altrady MCP to call get_session_context and tell me which exchange account is active.
 ```
 
-If the AI returns a valid session (exchange name, account label), the install succeeded. If the call fails with an auth error, walk the user through the Altrady auth flow.
+If the AI returns a valid session (exchange name, account label), the install succeeded. If the call fails with an auth error, the token in the registered MCP URL is invalid or expired — direct the user back to the Altrady desktop app to copy a fresh `claude mcp add altrady …` command.
 
 ---
 
@@ -90,7 +96,7 @@ If the AI returns a valid session (exchange name, account label), the install su
 
 When all phases pass, report:
 
-- The MCP server name (`altrady`) and where it's registered.
+- That the Altrady MCP server is registered and reachable.
 - The repo path (`$ALTRADY_HOME`).
 - The number of skills installed and where.
 - One suggestion to try next, e.g.:
