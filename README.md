@@ -8,31 +8,42 @@ This repo ships a curated set of **trader workflow skills** that build on top of
 
 ## Install
 
-The install is two steps. The Altrady desktop app gives you the first; this repo gives you the second.
+One prompt, one paste. The Altrady desktop app generates a prompt with your MCP URL and auth token already embedded; Claude Code does the rest.
 
-### Step 1 — Connect the MCP server (from the Altrady desktop app)
+### Step 1 — Copy the install prompt
 
 1. Open the **Altrady desktop app**.
-2. Go to **Settings → AI Assistants → Connect Claude Code** (or the equivalent for your AI tool).
-3. Copy the install command shown there. It includes your personal authorization token and looks roughly like:
-   ```
-   claude mcp add altrady <URL with your token>
-   ```
-4. Paste and run it in your terminal.
+2. Go to **Settings → MCP server**.
+3. Enable the MCP server if it isn't already.
+4. Click **Copy install prompt**.
+
+The clipboard now holds a prompt that looks like:
+
+```
+Install Altrady for me in Claude Code.
+
+MCP server URL: http://127.0.0.1:6850/mcp
+Auth token:     <your token>
+
+Fetch the install instructions at
+https://raw.githubusercontent.com/altrady/altrady-mcp/main/INSTALL.md
+and follow them exactly. Use the URL and token above in Phase 1.
+```
 
 > The token is account-scoped — don't share it or commit it. The desktop app can rotate it if needed.
 
-### Step 2 — Install the workflow skills
+### Step 2 — Paste it into Claude Code
 
-Paste this into Claude Code (or any AI tool that can read URLs and run shell):
+Open Claude Code and paste. Claude Code will:
 
-```
-Set up the Altrady workflow skills: read https://raw.githubusercontent.com/altrady/altrady-mcp/main/INSTALL.md and follow it exactly.
-```
+1. Register the Altrady MCP server using the URL and token from the prompt.
+2. Clone this repo into `~/.altrady-mcp`.
+3. Symlink the workflow skills into your Claude Code skills directory.
+4. Verify the connection by calling the MCP.
 
-The AI will clone this repo, install the skills into your Claude Code config, and verify the connection by calling the MCP.
+Then restart Claude Code so the skills load.
 
-Prefer to do it by hand? See **Manual install** below.
+Prefer to do it by hand? See **Manual install** below. Using Claude Desktop or Cursor's chat (no terminal access)? The desktop app's MCP settings page also exposes a **Copy JSON config** button for direct MCP client configuration — skills aren't available there, but the MCP server still is.
 
 > **Heads up:** money-affecting actions (opening positions, starting bots, deleting alerts) always require explicit confirmation. The skills are designed so the AI suggests and you approve.
 
@@ -43,17 +54,21 @@ Prefer to do it by hand? See **Manual install** below.
 If you'd rather run the steps yourself:
 
 ```bash
-# 1. Run the MCP install command from the Altrady desktop app
-#    (Settings → AI Assistants → Connect Claude Code)
-#    It looks like: claude mcp add altrady https://mcp.altrady.com/...?token=...
+# 1. Read the MCP URL and token from the Altrady desktop app
+#    (Settings → MCP server) — copy them from the "Copy install prompt" output
+#    or use the "Copy JSON config" output.
 
-# 2. Clone this repo
+# 2. Register the MCP server with Claude Code
+claude mcp add --transport http altrady "<URL>" \
+  --header "Authorization: Bearer <TOKEN>"
+
+# 3. Clone this repo
 git clone https://github.com/altrady/altrady-mcp ~/.altrady-mcp
 
-# 3. Install the skills
+# 4. Install the skills
 bash ~/.altrady-mcp/install.sh
 
-# 4. Restart Claude Code and verify
+# 5. Restart Claude Code and verify
 #    Ask: "Use the altrady MCP to show my session context"
 ```
 
@@ -79,7 +94,7 @@ bash ~/.altrady-mcp/install.sh
 
 ## What this repo is not
 
-- Not the MCP server itself. The server is installed via the command provided in the Altrady desktop app.
+- Not the MCP server itself. The server runs inside the Altrady desktop app — this repo only ships the workflow skills and the install recipe the AI follows to wire everything together.
 - Not a trading bot. The skills suggest actions; you confirm before anything executes.
 - Not financial advice. The skills automate workflows you'd already do by hand.
 

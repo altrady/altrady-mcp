@@ -32,6 +32,7 @@ echo
 echo "Done. $installed skill(s) linked into $CLAUDE_SKILLS"
 echo "Restart Claude Code to pick them up."
 echo
-echo "If you have not yet registered the Altrady MCP server:"
-echo "  Open the Altrady desktop app -> Settings -> AI Assistants -> Connect Claude Code"
-echo "  Copy the 'claude mcp add altrady ...' command (includes your auth token) and run it."
+echo "If you have not yet registered the Altrady MCP server with Claude Code:"
+echo "  Open the Altrady desktop app -> Settings -> MCP server"
+echo "  Click 'Copy install prompt' and paste it into Claude Code — it embeds the URL + token"
+echo "  and tells Claude Code to register the server and (re)install the skills."
