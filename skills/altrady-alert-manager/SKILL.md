@@ -19,9 +19,10 @@ Two modes: **create** (anchor alerts to meaningful levels) and **audit** (review
    - Identify any psychological level (round number) the price is near.
    - Present the candidate levels and let the user pick which to alert on.
 
-4. **For indicator-based alerts** (e.g., "alert me on RSI < 30", "MA cross"):
-   - Confirm the indicator and threshold.
-   - Note: indicator alerts are typically evaluated server-side by Altrady; create them via the same `create_alert` call with the indicator parameters.
+4. **For bar-close / candle-evaluated alerts** (e.g., "alert me when the 1h candle closes above 65k"):
+   - Confirm the price level and the candle timeframe.
+   - Use `alertType: "price"` with `data: {triggerType: "ONCE_ON_BAR_CLOSE", triggerResolution: "60"}` (resolution in minutes — "60" = 1h, "240" = 4h, "1D" = daily). The backend's `alertType` enum is `price | trend_line | time` — there's no separate `indicator` type.
+   - Pure indicator alerts ("alert when RSI < 30") aren't directly supported by `create_alert`; tell the user to set those up via the UI's Alert Form (chart → Alert tab) and offer to open the right chart with `mcp__altrady__open_market`.
 
 5. **Create the alert(s)** via `mcp__altrady__create_alert`. Use a descriptive message:
    - `"BTC-USDT reclaims 65,000 (4h resistance)"`
@@ -33,12 +34,14 @@ Two modes: **create** (anchor alerts to meaningful levels) and **audit** (review
 
 ## Mode: Audit
 
-1. `mcp__altrady__list_alerts` — all alerts.
+1. **Two parallel calls** to `mcp__altrady__list_alerts`:
+   - `status: "pending"` — alerts still armed.
+   - `status: "delivered"` — alerts that have already fired (these are your `FIRED` set without inference).
 
 2. **For each alert, fetch current price** via `mcp__altrady__get_market_ticker` (parallel by market).
 
 3. **Tag each alert:**
-   - `FIRED` — recently triggered (Altrady should expose this; if not, infer from price having crossed level).
+   - `FIRED` — came back in the `delivered` page above.
    - `STALE` — alert price is > 20% away from current AND alert is > 30 days old.
    - `DUPLICATE` — multiple alerts within 0.5% of the same price on the same market.
    - `IMMINENT` — alert is within 1% of current price.

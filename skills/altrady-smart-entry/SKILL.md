@@ -37,19 +37,26 @@ Use `AskUserQuestion` to gather what's missing:
 
 4. **Plan TPs:** if user picked staggered, default to R-multiples (T1 = 1R, T2 = 2R, T3 = 3R) unless they gave explicit prices. Each TP has a size fraction summing to 100%.
 
+   Optional SL protection — offer these when the trader has a multi-TP ladder:
+   - `protectionType: "break_even"` — SL moves to entry once the first TP fills. Good default for "no losers".
+   - `protectionType: "follow_take_profit"` — SL advances to each filled TP. Locks profit progressively.
+   - `protectionType: "price"` — true trailing stop. Requires `trailingPrice` (the price the trail arms at) and `trailingDistance` (% behind).
+   - Last TP can also trail — pass `takeProfitTrailingDistance: 1.5` (% trail on the final rung only).
+
 5. **Show the plan and ask for confirmation.** Format:
 
    ```
    ETH-USDT LONG (limit @ 3420)
      Size:        $X (Y ETH, ~Zx leverage if applicable)
      SL:          3198  (-6.5%, structure low from 1h candle 2026-05-19 14:00)
+                  Protection: Break Even after TP1
      TP1 (50%):   3642  (+6.5%, 1R)
-     TP2 (50%):   3864  (+13%, 2R)
+     TP2 (50%):   3864  (+13%, 2R) — trailing 1.5%
      Risk:        1.00% of $E equity = $R
    Confirm? (yes / adjust / cancel)
    ```
 
-6. **On confirmation:** call `mcp__altrady__open_smart_position` with the parameters. Report the position ID and the next step (`altrady-position-manager` to track it).
+6. **On verbal confirmation:** call `mcp__altrady__open_smart_position` with the parameters. The tool loads the setup directly into Altrady's Trade panel — it does **not** place orders. Tell the user: "Setup loaded in the Trade panel. Review the fields (especially size and leverage) and click Submit to actually place the orders." Once they confirm they've submitted, suggest `altrady-position-manager` to track the new position.
 
 ## Do not
 
