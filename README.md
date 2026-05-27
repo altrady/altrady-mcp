@@ -8,7 +8,7 @@ This repo ships a curated set of **trader workflow skills** that build on top of
 
 ## Install
 
-One prompt, one paste. The Altrady desktop app generates a prompt with your MCP URL and auth token already embedded; Claude Code does the rest.
+One prompt, one paste. The Altrady desktop app generates a prompt with your MCP URL and auth token already embedded; your AI assistant does the rest. Works with Claude Code, Cursor, Codex CLI, Claude Desktop, and any other MCP-capable tool.
 
 ### Step 1 — Copy the install prompt
 
@@ -20,30 +20,32 @@ One prompt, one paste. The Altrady desktop app generates a prompt with your MCP 
 The clipboard now holds a prompt that looks like:
 
 ```
-Install Altrady for me in Claude Code.
+Install the Altrady MCP server for me.
 
 MCP server URL: http://127.0.0.1:6850/mcp
 Auth token:     <your token>
 
 Fetch the install instructions at
 https://raw.githubusercontent.com/altrady/altrady-mcp/main/INSTALL.md
-and follow them exactly. Use the URL and token above in Phase 1.
+and follow them exactly. The instructions cover Claude Code, Cursor, Codex,
+Claude Desktop, and other MCP-capable AI tools — pick the one that matches
+your runtime. Use the URL and token above when registering the server.
 ```
 
 > The token is account-scoped — don't share it or commit it. The desktop app can rotate it if needed.
 
-### Step 2 — Paste it into Claude Code
+### Step 2 — Paste it into your AI assistant
 
-Open Claude Code and paste. Claude Code will:
+Open your AI assistant (Claude Code, Cursor, Codex, etc.) and paste. The assistant will:
 
-1. Register the Altrady MCP server using the URL and token from the prompt.
-2. Clone this repo into `~/.altrady-mcp`.
-3. Symlink the workflow skills into your Claude Code skills directory.
+1. Register the Altrady MCP server using the URL and token from the prompt — the registration mechanism is runtime-specific (CLI command, JSON config file, etc.) and `INSTALL.md` covers each.
+2. Clone this repo into `~/.altrady-mcp` (skipped on hosts without terminal access).
+3. **Claude Code only:** symlink the workflow skills into your Claude Code skills directory.
 4. Verify the connection by calling the MCP.
 
-Then restart Claude Code so the skills load.
+Restart the host app if it asks you to. Skills load on Claude Code restart; Cursor and Codex pick up MCP servers immediately.
 
-Prefer to do it by hand? See **Manual install** below. Using Claude Desktop or Cursor's chat (no terminal access)? The desktop app's MCP settings page also exposes a **Copy JSON config** button for direct MCP client configuration — skills aren't available there, but the MCP server still is.
+> **Skills are Claude Code only.** The MCP server works with any MCP-capable AI tool — but the curated workflow skills below target Claude Code's `Skill` mechanism. On other tools you'll call the MCP tools directly (still very usable, just no scripted multi-step workflows).
 
 > **Heads up:** money-affecting actions (opening positions, starting bots, deleting alerts) always require explicit confirmation. The skills are designed so the AI suggests and you approve.
 
@@ -51,25 +53,17 @@ Prefer to do it by hand? See **Manual install** below. Using Claude Desktop or C
 
 ## Manual install
 
-If you'd rather run the steps yourself:
+If you'd rather run the steps yourself, the per-tool registration blocks are in `INSTALL.md`. The shared steps after registration:
 
 ```bash
-# 1. Read the MCP URL and token from the Altrady desktop app
-#    (Settings → MCP server) — copy them from the "Copy install prompt" output
-#    or use the "Copy JSON config" output.
-
-# 2. Register the MCP server with Claude Code
-claude mcp add --transport http altrady "<URL>" \
-  --header "Authorization: Bearer <TOKEN>"
-
-# 3. Clone this repo
+# Clone this repo
 git clone https://github.com/altrady/altrady-mcp ~/.altrady-mcp
 
-# 4. Install the skills
+# Claude Code only: install the workflow skills
 bash ~/.altrady-mcp/install.sh
 
-# 5. Restart Claude Code and verify
-#    Ask: "Use the altrady MCP to show my session context"
+# Verify from your AI assistant
+#   Ask: "Use the altrady MCP to show my session context"
 ```
 
 ---
