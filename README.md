@@ -89,6 +89,7 @@ bash ~/.altrady-mcp/install.sh
 | `altrady-market-scanner` | "scan for breakouts", "find volatile coins", "what's pumping" | Ranks markets by volume, volatility, or trend criteria. |
 | `altrady-risk-sizer` | "size this trade", "how much can I buy", "risk calc" | Calculates position size from account risk %, SL distance, leverage. |
 | `altrady-trade-review` | "review my last trade", "journal this close", "what did I learn" | Pulls a closed position, reconstructs context, captures lessons. |
+| `altrady-backtest-analyzer` | "analyze my backtest", "review backtest X", "how did the backtest do" | Pulls a replay backtest with positions and trades; computes win rate, drawdown, hold time, fee drag; asks one targeted question. |
 
 ---
 
