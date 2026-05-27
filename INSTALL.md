@@ -28,6 +28,18 @@ The install has four phases:
 
 ---
 
+## If you can't execute these steps automatically
+
+If at any phase you lack the capability needed — no shell, no file-write permission, no MCP-registration mechanism in your host, or you're not an agentic assistant — **do not skip silently and do not pretend the install is complete**. Stop and hand the steps off to the user instead:
+
+1. Tell the user clearly *what you can't do* (e.g. "I can't edit `~/.cursor/mcp.json` from here").
+2. Quote the exact instructions for their runtime from the relevant phase below — file paths, JSON to paste, commands to run, buttons to click — in plain language.
+3. Wait for the user to confirm they've done it before moving on to the next phase.
+
+The MCP server, the URL, and the token are all the user needs. Your job in that case is to translate this recipe into a clear set of human-runnable steps.
+
+---
+
 ## Phase 1 — Register the MCP server
 
 Find the **MCP server URL** and **auth token** in the user's most recent message. They are the two values the desktop app embedded into the install prompt.
