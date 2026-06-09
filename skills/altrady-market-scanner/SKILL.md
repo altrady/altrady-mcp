@@ -61,6 +61,14 @@ For this skill:
   (pair, score/metric, price, 24h %, one-line context). Color 24h % with `pos`/`neg`. If any
   markets were skipped due to errors, list them in a muted card at the bottom.
 
+## Handling large result sets
+
+The universe-wide `get_market_ticker` / `get_ohlc` sweep can return a lot of data; large tool results
+are auto-saved by the harness to a file (path + schema returned). Don't Read the raw file into
+context — extract only the fields the criterion needs with `jq`, or compute the scores in a script
+and bring back just the ranked top-N. Prefer cheap ticker-only criteria, and narrow the universe
+before scanning. Full guidance: `report-kit/large-results.md`.
+
 ## Do not
 
 - Do not open positions or alerts from this skill. It's discovery.

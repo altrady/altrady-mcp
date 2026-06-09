@@ -60,6 +60,15 @@ For this skill:
   per section (positions, triggered alerts, bots, watchlist movers, suggested actions). Use the
   `pos`/`neg`/`warn` color classes and badges so flags (NO_SL, BE candidate, stopped-out) pop.
 
+## Handling large result sets
+
+`list_positions`, `list_alerts`, and the per-watchlist ticker sweep can return payloads that exceed
+the context limit; the harness then saves the result to a file and returns its path + schema. Don't
+Read the raw file into context — probe with `jq`, extract only the fields you need (or compute
+aggregates in a script), and bring back just the summary. Query narrow: filter where you can, use the
+smallest `perPage` that covers the need, request only the pages you'll use. Full guidance:
+`report-kit/large-results.md`.
+
 ## Do not
 
 - Do not open positions, edit positions, start/stop bots, or delete alerts from this skill. It's read-only by design (writing the local report file is fine).

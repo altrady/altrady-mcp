@@ -75,6 +75,15 @@ For this skill:
   `title: "Trade Review — week of <date>"`, and put the aggregate table (count, win rate, avg R,
   recurring lessons) in the BODY.
 
+## Handling large result sets
+
+`list_positions` (closed history) is large — a page of 50 can exceed the context limit, so the
+harness saves it to a file and returns the path + schema. Don't Read the raw file into context.
+Filter by `marketSymbol` when reviewing one market, use the smallest `perPage` that covers the need,
+then extract only the fields you need with `jq` (or compute roll-up aggregates in a script) and bring
+back just the summary. Sum the `*Usd` fields for mixed-currency math. Full guidance:
+`report-kit/large-results.md`.
+
 ## Do not
 
 - Do not reopen the chart or modify drawings — this is reflection, not action.

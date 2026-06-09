@@ -40,6 +40,14 @@ Help the trader keep their open positions healthy. You suggest, they confirm, th
 - `NO_SL` is always urgent and listed first.
 - Trailing distance default: the height of the last 3 candles on the position's working timeframe (estimate from `get_ohlc` if needed). Always show the trader the absolute price you'd set.
 
+## Handling large result sets
+
+`list_positions` and `get_position` can return large payloads; when a result exceeds the context
+limit the harness saves it to a file and returns the path + schema. Don't Read the raw file into
+context — extract only the fields you need per position (entry, SL, TPs, side, current PnL) with
+`jq`, or compute the per-position tags in a script and bring back just the table. Full guidance:
+`report-kit/large-results.md`.
+
 ## Do not
 
 - Do not tighten SLs beyond their original level toward entry except via the BE move (which is by definition entry). Tightening into a moving market destroys plans.

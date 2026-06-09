@@ -132,6 +132,15 @@ For this skill:
 - `BODY`: the three blocks from the summary — stat tiles (capital start→end, win rate, net P&L, max
   DD, fees), a "vs your rules" card with ✓/✗/△ rows, and a lessons card. Use `pos`/`neg`/`warn`.
 
+## Handling large result sets
+
+`get_backtest` returns positions, orders, trades and stats in one blob — it routinely exceeds the
+context limit, so the harness saves it to a file and returns the path + schema. Don't Read the raw
+file into context. Probe with `jq`, pull the aggregate `stats` block and only the per-position fields
+you need (status, side, openTime/closeTime, openPrice/closePrice, netProfit, smartSettings prices),
+and compute the analytics in a script — bring back only the computed summary. Full guidance:
+`report-kit/large-results.md`.
+
 ## Do not
 
 - Do not open new positions, modify alerts, or touch live trading from this skill. It's analysis only.

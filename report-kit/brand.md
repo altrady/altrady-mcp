@@ -30,10 +30,9 @@ System stack: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
 Tabular numerals for numeric table columns and timestamps.
 
 ## Logo
-The Altrady globe mark, embedded inline as SVG (no image file). The canonical, validated markup
-lives in **`report-kit/altrady-logo.svg`** — a four-layer version (brand blues `#017AFF`,
-`#01438D`, `#0156B3`, `#0068D9`) that is visually identical to the full mark at small sizes.
+The official Altrady logo (`https://cdn.altrady.com/static/altrady-logo-300x300.png`). The canonical
+copy lives in **`report-kit/altrady-logo.png`** (downscaled to 72×72 for size). Both templates embed
+it inline as a **base64 `data:` URI** so pages stay fully self-contained — no external requests.
 
-Both `report-template.html` and `index-template.html` already embed it in their header at 34×34.
-When building a new template, copy the `<svg>…</svg>` from `altrady-logo.svg` verbatim and keep it
-inline (so pages stay self-contained). Do not hand-edit the path data.
+Render at 34×34 in headers with a 7px corner radius. To refresh it, re-download the PNG, downscale
+(`sips -Z 72`), base64-encode, and replace the `src="data:image/png;base64,…"` in both templates.

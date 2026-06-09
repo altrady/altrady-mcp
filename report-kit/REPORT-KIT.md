@@ -9,7 +9,8 @@ reference this file instead of repeating the steps.
 **Kit (read-only inputs)** — ship with this plugin/repo, next to `skills/`:
 - `report-kit/report-template.html` — branded page shell with `{{SLOTS}}`.
 - `report-kit/index-template.html` — branded archive shell with a `{{HISTORY_JSON}}` slot.
-- `report-kit/altrady-logo.svg` / `report-kit/brand.md` — canonical logo + design tokens.
+- `report-kit/altrady-logo.png` / `report-kit/brand.md` — official logo (embedded in the templates
+  as a base64 data URI) + design tokens.
 
 Locate the kit at runtime, using the first path that exists:
 1. `$CLAUDE_PLUGIN_ROOT/report-kit/` — when installed as a Claude Code plugin.
