@@ -4,6 +4,22 @@ This is the shared procedure the **read-only reporter skills** follow to turn th
 branded HTML page, open it, and append it to the trader's local report archive. Reporter skills
 reference this file instead of repeating the steps.
 
+> **The report is the deliverable, not an extra.** Generate and open it as the final step of the
+> analysis automatically — do not wait for the user to ask for "a page" or "the webpage".
+
+## Language
+
+Write the report in **the language the user has been writing in** — detect it from their messages,
+don't default to English. This applies to everything you author: the title, subtitle, headline,
+section headings, stat-tile labels, table headers, badge text, prose, the terminal recap, and the
+archive index chrome (e.g. "Report archive", "All skills", the search placeholder, "No reports yet",
+the skill labels, "All reports" / footer in the templates). The English text in the templates and in
+each skill's examples is a **placeholder — translate it.**
+
+Leave untranslated: market symbols (`ETH-USDT`), numbers, currency codes, dates, and the
+machine-readable `history.jsonl` fields (`skill`, `id`, metric keys) — those stay canonical so the
+archive stays consistent across reports written in different languages.
+
 ## Where things live
 
 **Kit (read-only inputs)** — ship with this plugin/repo, next to `skills/`:

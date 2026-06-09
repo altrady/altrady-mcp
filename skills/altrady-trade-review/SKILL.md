@@ -1,13 +1,39 @@
 ---
 name: altrady-trade-review
-description: Use when the user wants to review or journal a trade — "review my last trade", "journal this close", "what did I learn from X", "post-mortem on Y trade". Pulls a closed position, reconstructs the chart context, prompts the trader for lessons, and saves a journal entry.
+description: Use when the user wants to review, journal, or analyze their trades/positions — "review my last trade", "journal this close", "what did I learn from X", "post-mortem on Y", "analyze my positions", "analyze my closed positions", "analyze my last 50 trades", "how did my trades do", "trade performance", "position performance", "review my trades". Reviews a single closed trade (recap + lesson + journal) OR analyzes a batch of closed positions (win rate, P&L, drawdown, fee drag, side split), and always renders a branded HTML report.
 ---
 
 # Altrady — Trade Review
 
 Make post-trade reflection cheap so the trader does it. The skill reconstructs what happened and asks one good question; the trader answers in 30 seconds.
 
-## Workflow
+Two modes — pick by what the user asked:
+- **Analyze multiple closed positions** ("analyze my positions", "how did my trades do", "last 50
+  trades") → the batch mode below.
+- **Review a single trade** ("review my last trade", "journal this close") → the single-trade
+  workflow further down.
+
+If the user means their **open** positions (current exposure, what to do now), this isn't the skill —
+hand to `altrady-morning-check` (overview) or `altrady-position-manager` (act on them).
+
+## Mode: analyze multiple closed positions
+
+1. **Fetch the set.** `mcp__altrady__list_positions` with `status: closed`. For "last N", request one
+   page with `perPage: N`. This payload is large — follow `report-kit/large-results.md` (probe +
+   extract with `jq`/a script; don't read the raw file into context).
+2. **Compute aggregates in a script.** Sum the `*Usd` fields (positions span EUR/USDC/USDT):
+   count, win rate, net / avg / median P&L (USD), best & worst, hold time (median + mean),
+   long-vs-short split, longest win/loss streak, peak-to-trough drawdown (walk close-time order),
+   fee drag (fees as % of gross), and R-multiple where a stop-loss was recorded (note coverage).
+3. **Render the branded report — this is the deliverable, don't wait to be asked.** Follow
+   `report-kit/REPORT-KIT.md` with: stat tiles (positions, win rate, net P&L, avg, best/worst, fees),
+   an **equity curve** (inline SVG of cumulative USD P&L by close time), and breakdown tables
+   (by side, top markets, best/worst trades). Use `<skill-short>: trade-review`, `market: null`,
+   `title: "Trade Review — last <N> closed"`, `metrics: { positions, winRatePct, netPnlUsd, bestUsd, worstUsd }`.
+4. **End with one targeted observation** (e.g. "fees ate more than net profit", "shorts win often
+   but lose net") — one, not a list. The trader draws the lesson.
+
+## Mode: review a single trade
 
 1. **Pick the trade.** Ask which one if not obvious:
    - "Most recent close" — call `mcp__altrady__list_positions` (status: closed if the API supports filtering; otherwise filter client-side).
