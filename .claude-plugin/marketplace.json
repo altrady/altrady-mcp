@@ -1,0 +1,13 @@
+{
+  "name": "altrady",
+  "owner": { "name": "Altrady", "email": "support@altrady.com" },
+  "description": "Altrady trader workflow skills for Claude Code.",
+  "plugins": [
+    {
+      "name": "altrady-skills",
+      "source": ".",
+      "description": "Trader workflow skills that build on the Altrady MCP server.",
+      "license": "MIT"
+    }
+  ]
+}

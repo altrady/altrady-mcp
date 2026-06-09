@@ -154,7 +154,33 @@ fi
 
 > The skills in this repo target Claude Code's `Skill` tool. **Skip this phase** if you're not in Claude Code — there's no skill mechanism to install into.
 
-Symlink each skill into the user's Claude Code skills directory so updates via `git pull` propagate automatically:
+### Preferred: install as an auto-updating plugin
+
+This repo doubles as a Claude Code plugin marketplace. Installing the skills as a plugin gives the user automatic updates (no `git pull`, no symlinks). Tell the user to run, inside Claude Code:
+
+```
+/plugin marketplace add altrady/altrady-mcp
+/plugin install altrady-skills@altrady
+```
+
+Then enable auto-update so future skill changes flow in on startup. Either direct the user to the `/plugin` UI (Marketplaces tab → **Enable auto-update**), or add this to `~/.claude/settings.json`:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "altrady": {
+      "source": { "source": "github", "repo": "altrady/altrady-mcp" },
+      "autoUpdate": true
+    }
+  }
+}
+```
+
+If you took the plugin route, you can **skip the symlink steps below** (and Phase 2's clone is not required for skills — only do it if you want a local checkout for other reasons). Plugin skills are namespaced as `/altrady-skills:<skill-name>`; natural-language triggers still work unchanged.
+
+### Fallback: symlink install
+
+If the plugin system isn't available or the user prefers it, symlink each skill into the user's Claude Code skills directory so updates via `git pull` propagate (requires Phase 2's clone):
 
 ```bash
 CLAUDE_SKILLS="${CLAUDE_SKILLS:-$HOME/.claude/skills}"

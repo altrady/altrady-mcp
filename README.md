@@ -40,10 +40,36 @@ Open your AI assistant (Claude Code, Cursor, Codex, etc.) and paste. The assista
 
 1. Register the Altrady MCP server using the URL and token from the prompt — the registration mechanism is runtime-specific (CLI command, JSON config file, etc.) and `INSTALL.md` covers each.
 2. Clone this repo into `~/.altrady-mcp` (skipped on hosts without terminal access).
-3. **Claude Code only:** symlink the workflow skills into your Claude Code skills directory.
+3. **Claude Code only:** install the workflow skills (as an auto-updating plugin — see below).
 4. Verify the connection by calling the MCP.
 
 Restart the host app if it asks you to. Skills load on Claude Code restart; Cursor and Codex pick up MCP servers immediately.
+
+### Claude Code: install skills as an auto-updating plugin (recommended)
+
+After the MCP server is registered (Step 1–2 above), install the skills as a Claude Code plugin. This repo doubles as a plugin marketplace, so updates flow automatically — no `git pull`, no symlinks:
+
+```
+/plugin marketplace add altrady/altrady-mcp
+/plugin install altrady-skills@altrady
+```
+
+Third-party marketplaces don't auto-update by default. To turn it on, use the `/plugin` UI (Marketplaces tab → **Enable auto-update**), or add this to your `~/.claude/settings.json`:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "altrady": {
+      "source": { "source": "github", "repo": "altrady/altrady-mcp" },
+      "autoUpdate": true
+    }
+  }
+}
+```
+
+With that set, the skills update themselves on every Claude Code startup. Plugin skills are namespaced (e.g. `/altrady-skills:altrady-morning-check`), but natural-language triggers ("do a morning check") work exactly as before.
+
+> The legacy symlink installer (`install.sh`) still works if you'd rather not use the plugin system — see **Manual install** below.
 
 > **Skills are Claude Code only.** The MCP server works with any MCP-capable AI tool — but the curated workflow skills below target Claude Code's `Skill` mechanism. On other tools you'll call the MCP tools directly (still very usable, just no scripted multi-step workflows).
 
@@ -56,11 +82,13 @@ Restart the host app if it asks you to. Skills load on Claude Code restart; Curs
 If you'd rather run the steps yourself, the per-tool registration blocks are in `INSTALL.md`. The shared steps after registration:
 
 ```bash
-# Clone this repo
-git clone https://github.com/altrady/altrady-mcp ~/.altrady-mcp
+# Claude Code: install skills as an auto-updating plugin (preferred)
+#   /plugin marketplace add altrady/altrady-mcp
+#   /plugin install altrady-skills@altrady
 
-# Claude Code only: install the workflow skills
-bash ~/.altrady-mcp/install.sh
+# Or the legacy symlink route — clone, then link the skills:
+git clone https://github.com/altrady/altrady-mcp ~/.altrady-mcp
+bash ~/.altrady-mcp/install.sh   # Claude Code only; re-run after `git pull` to update
 
 # Verify from your AI assistant
 #   Ask: "Use the altrady MCP to show my session context"
