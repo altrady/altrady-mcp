@@ -56,6 +56,20 @@ ETH-USDT LONG
 
 End with: "Want me to open this via `altrady-smart-entry`?" — hand off rather than executing.
 
+## Output: branded report
+
+Render the sizing as an Altrady-branded HTML page, open it, and log it to the trader's report
+archive — follow the shared procedure in `report-kit/REPORT-KIT.md`. Keep the terminal output to
+the headline + file path, and still end with the `altrady-smart-entry` hand-off line.
+
+For this skill:
+- `<skill-short>`: `risk-size`; `title`: `"Risk Sizing — <pair>"`; `market`: the pair.
+- `metrics`: `{ side, riskPct, notional, units, leverage }`.
+- `headline`: e.g. `"ETH-USDT LONG · risk 1% · 0.588 ETH · 3×"`.
+- `BODY`: stat tiles for the key outputs (notional, units, margin required, risk $), then a card
+  with the full input→output breakdown (equity, risk %, entry, SL, distance, leverage, free
+  margin). Surface any sanity-check warnings (SL too tight, margin shortfall) as `warn` badges.
+
 ## Do not
 
 - Do not open the position from this skill.

@@ -54,6 +54,21 @@ Bring a chart from blank to fully marked-up. Your output is a written read of th
 - Whether to clear existing drawings first (`mcp__altrady__clear_chart_drawings`) or layer on top.
 - Whether to apply indicators (some traders prefer naked charts).
 
+## Output: branded report
+
+The drawings + indicators still go on the live chart via the MCP. *In addition*, render the written
+read as an Altrady-branded HTML page, open it, and log it to the trader's report archive — follow
+the shared procedure in `report-kit/REPORT-KIT.md`. The page captures the analysis and the levels
+you drew (it is not a chart screenshot). Keep the terminal output to the headline + file path.
+
+For this skill:
+- `<skill-short>`: `ta`; `title`: `"Technical Analysis — <pair>"`; `market`: the pair.
+- `metrics`: `{ htfTrend, bias, keyLevels }` (keyLevels = array of the prices you drew).
+- `headline`: e.g. `"ETH-USDT · HTF up · bias bullish"`.
+- `BODY`: a stat-tile row (HTF trend, working TF, bias), the three-paragraph read as cards
+  (HTF context / working-TF setup / LTF tactical), and a table of the drawn levels
+  (type = support/resistance/trend/range, price, note). End with the one-line bias as a badge.
+
 ## Do not
 
 - Do not draw arbitrary Fibs, harmonic patterns, Gann fans, or other low-evidence overlays unless explicitly asked.

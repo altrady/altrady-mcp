@@ -118,6 +118,20 @@ Turn a replay-backtest into a one-page picture of what worked, what didn't, and 
 - `trades[]` items have `externalOrderId` linking back to orders. For per-position trade detail, filter `trades` by the position's exit-order ids — the payload has both.
 - The aggregate `stats` block may include `totalProfitQuote`, `totalProfitPct`, `totalFeesQuote`, `numBuyFills`, `numSellFills`, etc. Use them when present rather than recomputing.
 
+## Output: branded report
+
+Render the analysis as an Altrady-branded HTML page, open it, and log it to the trader's report
+archive — follow the shared procedure in `report-kit/REPORT-KIT.md`. Do this *after* the trader has
+answered the rules question (or you've labelled assumptions). Keep the terminal output to the
+headline + file path; ask your one targeted question in the terminal as usual.
+
+For this skill:
+- `<skill-short>`: `backtest`; `title`: `"Backtest — <pair>"`; `market`: the pair.
+- `metrics`: `{ window, winRate, netPnlPct, maxDD, positions }`.
+- `headline`: e.g. `"ETH-USDT · +14.2% · 68% win · -8.4% DD"`.
+- `BODY`: the three blocks from the summary — stat tiles (capital start→end, win rate, net P&L, max
+  DD, fees), a "vs your rules" card with ✓/✗/△ rows, and a lessons card. Use `pos`/`neg`/`warn`.
+
 ## Do not
 
 - Do not open new positions, modify alerts, or touch live trading from this skill. It's analysis only.

@@ -112,6 +112,30 @@ bash ~/.altrady-mcp/install.sh   # Claude Code only; re-run after `git pull` to 
 | `altrady-risk-sizer` | "size this trade", "how much can I buy", "risk calc" | Calculates position size from account risk %, SL distance, leverage. |
 | `altrady-trade-review` | "review my last trade", "journal this close", "what did I learn" | Pulls a closed position, reconstructs context, captures lessons. |
 | `altrady-backtest-analyzer` | "analyze my backtest", "review backtest X", "how did the backtest do" | Pulls a replay backtest with positions and trades; computes win rate, drawdown, hold time, fee drag; asks one targeted question. |
+| `altrady-report-archive` | "open my altrady reports", "show report history", "rebuild my report archive" | Opens the local branded report archive that the read-only skills write into; can rebuild the index or summarize what's saved. |
+
+---
+
+## Reports & history
+
+The read-only skills (morning check, market scan, backtest, risk sizing, technical analysis, trade
+review, watchlist mover scan) don't just print to the terminal — each run also writes a
+**self-contained, Altrady-branded HTML report**, opens it in your browser, and appends it to a local
+archive you can browse:
+
+```
+~/altrady-reports/
+├── index.html            # branded archive — search/filter every past report
+├── reports/<run>.html    # one self-contained page per run
+└── data/history.jsonl    # append-only log behind the archive
+```
+
+The terminal keeps a short recap (headline + file path); the page is the full view. Say
+*"open my altrady reports"* any time to browse the history, or just bookmark `index.html`. Reports
+contain account data, so the archive stays **local only** and is never committed or uploaded.
+
+Branding/template live in [`report-kit/`](report-kit/) and travel with the plugin, so report styling
+auto-updates along with the skills.
 
 ---
 

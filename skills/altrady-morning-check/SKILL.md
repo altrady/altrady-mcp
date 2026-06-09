@@ -46,8 +46,22 @@ End with at most 3 concrete suggestions, each one mapped to a follow-up skill:
 - "BTC alert at 65k fired — do you want a TA pass?" → `altrady-technical-analysis`
 - "Two watchlist coins look like breakout setups (SOL, AVAX)" → `altrady-market-scanner`
 
+## Output: branded report
+
+Render the brief as an Altrady-branded HTML page, open it, and log it to the trader's report
+archive — follow the shared procedure in `report-kit/REPORT-KIT.md`. Keep the terminal output to
+the headline + file path; the page is the deliverable.
+
+For this skill:
+- `<skill-short>`: `morning-check`; `title`: `"Morning Check"`; `market`: `null` (account-wide).
+- `metrics`: `{ openPositions, dayPnlPct, alertsFired, botsRunning }`.
+- `headline`: e.g. `"3 positions · +2.1% day · 2 alerts fired"`.
+- `BODY`: lead with stat tiles (positions, day P&L, alerts fired, bots running), then one card/table
+  per section (positions, triggered alerts, bots, watchlist movers, suggested actions). Use the
+  `pos`/`neg`/`warn` color classes and badges so flags (NO_SL, BE candidate, stopped-out) pop.
+
 ## Do not
 
-- Do not open positions, edit positions, start/stop bots, or delete alerts from this skill. It's read-only by design.
+- Do not open positions, edit positions, start/stop bots, or delete alerts from this skill. It's read-only by design (writing the local report file is fine).
 - Do not dump raw JSON. Summarize.
 - Do not invent metrics the API doesn't return (e.g., "Sharpe ratio") — stick to what `get_position` and `get_bots_stats` actually expose.

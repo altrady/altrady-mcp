@@ -37,6 +37,20 @@ Three sub-workflows: **build** a new themed list, **mover scan** an existing lis
 
 5. End with: "Want me to do TA on any of these?" — suggesting the `altrady-technical-analysis` skill.
 
+### Output: branded report (mover scan only)
+
+Render the mover scan as an Altrady-branded HTML page, open it, and log it to the trader's report
+archive — follow the shared procedure in `report-kit/REPORT-KIT.md`. Keep the terminal output to
+the headline + file path, and still end with the TA hand-off line. The **build** and **prune**
+sub-workflows stay terminal-only (they're interactive edits, not reports).
+
+For the mover scan:
+- `<skill-short>`: `watchlist-scan`; `title`: `"Watchlist Scan — <list name>"`; `market`: `null`.
+- `metrics`: `{ listName, topGainer, topLoser }`.
+- `headline`: e.g. `"Layer 1s · 12 coins · top SOL +8.4% / worst NEAR -5.1%"`.
+- `BODY`: tables for top movers (24h %), volume spikes, and any market near a 30-day high/low.
+  Color 24h % with `pos`/`neg`; badge the near-high/low rows.
+
 ## Prune
 
 1. `mcp__altrady__get_watchlist` for the target list.

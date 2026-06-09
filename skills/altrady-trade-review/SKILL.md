@@ -58,6 +58,23 @@ Make post-trade reflection cheap so the trader does it. The skill reconstructs w
 
 7. **Optional roll-up.** If the user asks "review this week", repeat the above for each closed trade in the window and produce a one-pager: count, win rate, average R, and the recurring lessons across entries.
 
+## Output: branded report
+
+The markdown journal entry (step 6) stays as-is. *In addition*, once the trader has answered the
+review question, render the recap + lesson as an Altrady-branded HTML page, open it, and log it to
+the report archive — follow the shared procedure in `report-kit/REPORT-KIT.md`. Keep the terminal
+output to the headline + file path.
+
+For this skill:
+- `<skill-short>`: `trade-review`; `title`: `"Trade Review — <pair>"`; `market`: the pair.
+- `metrics`: `{ rMultiple, heldHours, outcome }`.
+- `headline`: e.g. `"ETH-USDT LONG · +1.85R · 18h · TP2 hit"`.
+- `BODY`: stat tiles (R-multiple, held, max favorable/adverse), a recap card (entry/exit/outcome),
+  and a card holding the trader's answer + their one-line lesson (their words, not yours).
+- For the weekly roll-up, set `<skill-short>` to `trade-review`, `market: null`,
+  `title: "Trade Review — week of <date>"`, and put the aggregate table (count, win rate, avg R,
+  recurring lessons) in the BODY.
+
 ## Do not
 
 - Do not reopen the chart or modify drawings — this is reflection, not action.

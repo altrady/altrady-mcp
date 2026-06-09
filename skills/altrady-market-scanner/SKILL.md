@@ -47,6 +47,20 @@ Find candidates worth analyzing. This skill produces a ranked shortlist — it d
 - A full exchange scan can be hundreds of markets. Warn the user before scanning > 200 markets and offer to narrow.
 - Prefer ticker-only criteria (volume spike, 24h %) when possible — they're cheap. OHLC scans are expensive.
 
+## Output: branded report
+
+Render the shortlist as an Altrady-branded HTML page, open it, and log it to the trader's report
+archive — follow the shared procedure in `report-kit/REPORT-KIT.md`. Keep the terminal output to
+the headline + file path.
+
+For this skill:
+- `<skill-short>`: `market-scan`; `title`: `"Market Scan — <criterion>"`; `market`: `null`.
+- `metrics`: `{ criterion, universeSize, topPick, topScore }`.
+- `headline`: e.g. `"Breakout scan · 142 markets · top SOL-USDT (98% of 60d high)"`.
+- `BODY`: a stat-tile row (criterion, universe size, # ranked), then the top-10 ranked table
+  (pair, score/metric, price, 24h %, one-line context). Color 24h % with `pos`/`neg`. If any
+  markets were skipped due to errors, list them in a muted card at the bottom.
+
 ## Do not
 
 - Do not open positions or alerts from this skill. It's discovery.
