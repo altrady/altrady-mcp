@@ -19,12 +19,11 @@ Claude Desktop, and other MCP-capable AI tools — pick the one that matches
 your runtime. Use the URL and token above when registering the server.
 ```
 
-The install has four phases:
+The install has three phases:
 
 1. Identify your runtime and register the Altrady MCP server using the URL + token from the user's prompt.
-2. Clone this repo to a stable local path.
-3. (Claude Code only) Install the workflow skills into the skills directory.
-4. Verify the install end-to-end.
+2. (Claude Code only) Install the workflow skills — as a plugin if you can, otherwise via a clone + symlink fallback.
+3. Verify the install end-to-end.
 
 ---
 
@@ -128,42 +127,22 @@ After registration, do **not** continue until the registration is confirmed (eit
 
 ---
 
-## Phase 2 — Clone this repo
+## Phase 2 — Install workflow skills (Claude Code only)
 
-Pick the install path:
+> The skills target Claude Code's `Skill` tool. **If you are not Claude Code** (Cursor, Codex, Claude Desktop, a non-CLI host, etc.) there is no skill mechanism to install into — **skip this entire phase** and go to Phase 3. The MCP server alone is fully functional; the skills are an optional Claude Code add-on.
 
-```bash
-ALTRADY_HOME="${ALTRADY_HOME:-$HOME/.altrady-mcp}"
-```
+### If you are Claude Code: install the plugin (this is the whole phase)
 
-Clone (or pull if already present):
-
-```bash
-if [ -d "$ALTRADY_HOME/.git" ]; then
-  git -C "$ALTRADY_HOME" pull --ff-only
-else
-  git clone https://github.com/altrady/altrady-mcp "$ALTRADY_HOME"
-fi
-```
-
-> If you're running in a non-CLI environment that can't shell out (e.g. Claude Desktop with no terminal access), **skip Phase 2 and Phase 3** and jump to Phase 4. The MCP server alone is fully functional — the skills are an optional Claude Code add-on.
-
----
-
-## Phase 3 — Install workflow skills (Claude Code only)
-
-> The skills in this repo target Claude Code's `Skill` tool. **Skip this phase** if you're not in Claude Code — there's no skill mechanism to install into.
-
-### Preferred: install as an auto-updating plugin
-
-This repo doubles as a Claude Code plugin marketplace. Installing the skills as a plugin gives the user automatic updates (no `git pull`, no symlinks). Tell the user to run, inside Claude Code:
+This repo doubles as a Claude Code plugin marketplace. The plugin install delivers the skills with automatic updates — **there is no repo to clone and nothing to symlink.** Tell the user to run, inside Claude Code:
 
 ```
 /plugin marketplace add altrady/altrady-mcp
 /plugin install altrady-skills@altrady
 ```
 
-Then enable auto-update so future skill changes flow in on startup. Either direct the user to the `/plugin` UI (Marketplaces tab → **Enable auto-update**), or add this to `~/.claude/settings.json`:
+Then `/reload-plugins` (or restart Claude Code) to load them.
+
+Enable auto-update so future skill changes flow in on startup — either the `/plugin` UI (Marketplaces tab → **Enable auto-update**), or add this to `~/.claude/settings.json`:
 
 ```json
 {
@@ -176,22 +155,28 @@ Then enable auto-update so future skill changes flow in on startup. Either direc
 }
 ```
 
-If you took the plugin route, you can **skip the symlink steps below** (and Phase 2's clone is not required for skills — only do it if you want a local checkout for other reasons). Plugin skills are namespaced as `/altrady-skills:<skill-name>`; natural-language triggers still work unchanged.
+Plugin skills are namespaced as `/altrady-skills:<skill-name>`; natural-language triggers still work unchanged. **Once the plugin is installed, Phase 2 is done — do NOT clone the repo or run the fallback below. Go to Phase 3.**
 
-### Fallback: symlink install
+### Fallback only — clone + symlink
 
-If the plugin system isn't available or the user prefers it, symlink each skill into the user's Claude Code skills directory so updates via `git pull` propagate (requires Phase 2's clone):
+Use this **only if** the `/plugin` commands above aren't available (an older Claude Code without plugin support, or the user explicitly asks for it). Skip it entirely when the plugin install worked.
 
 ```bash
+# clone (or pull) the repo to a stable path
+ALTRADY_HOME="${ALTRADY_HOME:-$HOME/.altrady-mcp}"
+if [ -d "$ALTRADY_HOME/.git" ]; then
+  git -C "$ALTRADY_HOME" pull --ff-only
+else
+  git clone https://github.com/altrady/altrady-mcp "$ALTRADY_HOME"
+fi
+
+# symlink each skill into the Claude Code skills dir (updates then come via git pull)
 CLAUDE_SKILLS="${CLAUDE_SKILLS:-$HOME/.claude/skills}"
 mkdir -p "$CLAUDE_SKILLS"
-
 for skill_dir in "$ALTRADY_HOME"/skills/*/; do
   name="$(basename "$skill_dir")"
   target="$CLAUDE_SKILLS/$name"
-  if [ -L "$target" ] || [ -e "$target" ]; then
-    rm -rf "$target"
-  fi
+  if [ -L "$target" ] || [ -e "$target" ]; then rm -rf "$target"; fi
   ln -s "$skill_dir" "$target"
   echo "Installed skill: $name"
 done
@@ -201,7 +186,7 @@ Equivalent shortcut: `bash "$ALTRADY_HOME/install.sh"`.
 
 ---
 
-## Phase 4 — Verify
+## Phase 3 — Verify
 
 If your host app required a restart (Claude Desktop), ask the user to restart it now. For Claude Code, restart so skills load. Cursor/Codex pick up the change immediately.
 
@@ -222,8 +207,7 @@ Use the Altrady MCP to call get_session_context and tell me which exchange accou
 When all phases pass, report:
 
 - That the Altrady MCP server is registered and reachable from your runtime.
-- (If Phase 2 ran) The repo path (`$ALTRADY_HOME`).
-- (If Phase 3 ran) The number of skills installed and where.
+- (If you installed skills) Whether they went in via the **plugin** (mention enabling auto-update) or the **clone + symlink fallback** (`$ALTRADY_HOME`), and how many.
 - One suggestion to try next. If skills are available, prefer one tied to a skill:
   > "Try saying: *do a morning check* — that runs the `altrady-morning-check` skill and surfaces your positions, alerts, and watchlist movers."
   Otherwise, suggest a direct MCP call:
