@@ -103,7 +103,7 @@ bash ~/.altrady-mcp/install.sh   # Claude Code only; re-run after `git pull` to 
 | `altrady-morning-check` | "morning check", "what's happening today", "review my account" | Surfaces open positions, triggered alerts, bot performance, and watchlist movers in one sweep. |
 | `altrady-smart-entry` | "open a long/short", "I want to buy X", "enter a position" | Sizes a position from your risk %, places SL at structure, staggers TPs, opens via `open_smart_position`. |
 | `altrady-position-manager` | "manage my positions", "move SL to BE", "trail this trade" | Walks open positions and applies BE moves, trails, partial closes. |
-| `altrady-technical-analysis` | "analyze X", "do TA on", "what's the chart saying" | Multi-timeframe scan with indicator templates + structure drawings. |
+| `altrady-technical-analysis` | "analyze X", "do TA on", "what's the chart saying" | Multi-timeframe scan with indicator templates + structure drawings; can save the marked-up chart + written read to your notes. |
 | `altrady-grid-bot-builder` | "set up a grid bot", "build a grid on X" | Derives range from recent price action, sets density from volatility, creates + starts a grid bot. |
 | `altrady-signal-bot-builder` | "create a signal bot", "set up DCA on X" | Designs DCA with base, safety orders, and TP grid; creates + starts a signal bot. |
 | `altrady-alert-manager` | "set alerts on X", "audit my alerts", "clean up alerts" | Creates alerts at meaningful levels; prunes stale alerts. |
